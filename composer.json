@@ -1,0 +1,22 @@
+{
+    "name": "asmundstavdahl/ryof",
+    "description": "Roll Your Own Framework",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Åsmund Stavdahl"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "laminas/laminas-diactoros": "^2.1",
+        "psr/http-message": "^1.0",
+        "psr/http-server-middleware": "^1.0",
+        "psr/http-server-handler": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "": "src/"
+        }
+    }
+}
