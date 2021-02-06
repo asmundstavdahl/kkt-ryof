@@ -1,0 +1,133 @@
+{% extends 'base/control_panel/admin_base.html.twig' %}
+
+{% block body %}
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>Kontrollpanel</h1>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <!-- Info boxes -->
+        <div class="row">
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <a href="{{ path('cp_users') }}" class="info-link">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-aqua"><i class="fa fa-user"></i></span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">Brukere</span>
+                            <span class="info-box-number">{{ userCount }}</span>
+                            {% if newUserCount > 0 %}
+                                <p class="text-faded"><span
+                                            class="text-success">+{{ newUserCount }}</span> {{ currentSemester }}</p>
+                            {% endif %}
+                        </div>
+                        <!-- /.info-box-content -->
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <a href="{{ path('cp_course') }}" class="info-link">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-green"><i class="fa fa-line-chart"></i></span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">Kurs</span>
+                            <span class="info-box-number">{{ courseCount }}</span>
+                            {% if newCourseCount > 0 %}
+                                <p class="text-faded"><span
+                                            class="text-success">+{{ newCourseCount }}</span> {{ currentSemester }}</p>
+                            {% endif %}
+                        </div>
+                        <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </a>
+            </div>
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <a href="{{ path('cp_participants') }}" class="info-link">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-yellow"><i class="fa fa-users"></i></span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">Kursdeltakere</span>
+                            <span class="info-box-number">{{ participantCount }}</span>
+                            {% if newParticipantCount > 0 %}
+                                <p class="text-faded"><span
+                                            class="text-success">+{{ newParticipantCount }}</span> {{ currentSemester }}
+                                </p>
+                            {% endif %}
+                        </div>
+                        <!-- /.info-box-content -->
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <a href="{{ path('cp_tutors') }}" class="info-link">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-red"><i class="fa fa-user-secret"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text">Kursveiledere</span>
+                            <span class="info-box-number">{{ tutorCount }}</span>
+                            {% if newTutorCount > 0 %}
+                                <p class="text-faded"><span
+                                            class="text-success">+{{ newTutorCount }}</span> {{ currentSemester }}</p>
+                            {% endif %}
+                        </div>
+                        <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </a>
+            </div>
+        </div><!-- /.row -->
+        <hr>
+        <div class="row">
+            <div class="col-xs-12 col-md-10 col-lg-6">
+                <h3>Changelog</h3>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Dato</th>
+                        <th>Beskrivelse</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>30.06.17</td>
+                        <td>Vis meldingen i timplanen på forsiden hvis alle kursene er ferdige / ikke startet
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>30.06.17</td>
+                        <td>1. Byttet uke med dato på påmeldingssiden. <br>
+                            2. Hvis siste kursdag har passert:
+                            <ul>
+                                <li>Viser en melding om at kurset er ferdig</li>
+                                <li>Fjernet påmelding</li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>28.01.17</td>
+                        <td>Søkefunksjonalitet i <a href="{{ path('cp_users') }}">brukerlisten</a>.
+                            Listen blir også delt i flere 'sider', og den kan sorteres ved å trykke på overskriften til
+                            kolonnene
+                            (Navn, E-post, Telefon, Opprettet, Brukertype).
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>04.01.17</td>
+                        <td>Deltakere og foreldre kan sette seg på venteliste hvis kurset er fullt. De blir automatisk
+                            flyttet fra venteliste til kurset når det blir plass. De får en e-post når de blir flyttet.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>03.01.17</td>
+                        <td>Brukere kan endre kontoinformasjon fra dropdown-listen øverst til høyere i navigasjonen.
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section><!-- /.content -->
+{% endblock %}

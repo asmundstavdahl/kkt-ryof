@@ -1,0 +1,24 @@
+{% extends 'base/control_panel/admin_base.html.twig' %}
+
+{% block body %}
+    <section class="content-header">
+        <h1>{{ course.name|length ? 'Endre ' ~ course.name : 'Ny kursserie'}}</h1>
+        <hr>
+    </section>
+
+    <section class="content">
+        <div class="row">
+            <div class="col-md-6">
+                {{ form_start(form) }}
+                {{ form_row(form.name) }}
+                {{ form_row(form.description) }}
+                <a href="{{ path('cp_create_course_type') }}">Ny kurstype <i class="fa fa-plus"></i></a>
+                {{ form_row(form.courseType) }}
+                {{ form_row(form.participantLimit) }}
+                {{ form_row(form.semester) }}
+                <button class="btn btn-primary btn-sm-btn-flat onclick-disable" type="submit">Lagre</button>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </section>
+{% endblock %}

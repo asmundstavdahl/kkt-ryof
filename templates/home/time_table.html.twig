@@ -1,0 +1,149 @@
+<div class="box box-success">
+    <div class="box-header with-border">
+        <h3 class="box-title box-title-lg">Timeplan {{ currentSemester }}</h3>
+        <div class="pull-right hidden-xs">
+            <h3 class="box-title" style="vertical-align: middle;">Uke <span class="weekNumber">{{ week }}</span></h3>&nbsp;&nbsp;&nbsp;
+            <button onclick="prevWeek()" class="btn btn-primary btn-xs btn-flat"><i class="fa fa-chevron-left"></i></button>
+            <button onclick="thisWeek()" class="btn btn-primary btn-xs btn-flat">Denne uken</button>
+            <button onclick="nextWeek()" class="btn btn-primary btn-xs btn-flat"><i class="fa fa-chevron-right"></i></button>
+        </div>
+        <div class="visible-xs">
+            <hr>
+            <h4 class="text-center">Uke <span class="weekNumber">{{ week }}</span></h4>
+            <div class="row">
+                <div class="col-xs-12">
+                    <button onclick="prevWeek()" class="float-left btn btn-primary btn-xs btn-flat">
+                        <i class="fa fa-chevron-left"></i> Forrige uke
+                    </button>
+
+                    <button onclick="nextWeek()" class="float-right btn btn-primary btn-xs btn-flat">
+                        Neste uke&nbsp;<i class="fa fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="box-body">
+        <div class="table-responsive">
+            <table id="timeTable" class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Dag</th>
+                    <th>Kurs</th>
+                    <th>Tid</th>
+                    <th>Sted</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for class in courseClasses %}
+                    <tr timestamp="{{ class.time|date('U') }}" class="time-table-class">
+                        <td>{{ class.dayNorwegian }}</td>
+                        <td><a href="{{ path('course_info', {id: class.course.id}) }}">{{ class.course.name }}</a></td>
+                        <td>{{ class.time|date('H:i') }}</td>
+                        <td>{{ class.place }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {% if not courseClasses|length %}
+                <h5>Ingen kurs denne uken</h5>
+
+                {% if firstClass and not coursesHasStarted %}
+                    <p class="warning text-info">Første kursdag er {{ firstClass.time|localizeddate('none', 'none', app.request.locale, null, 'dd. MMMM') }}</p>
+                {% endif %}
+
+                {% if lastClass and coursesHasEnded %}
+                    <p class="warning text-warning"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Siste kursdag var {{ lastClass.time|localizeddate('none', 'none', app.request.locale, null, 'dd. MMMM') }}</p>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+<script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+
+<script>
+    var week = {{ week }};
+    var $loadingWheel;
+    document.addEventListener("DOMContentLoaded", function () {
+
+        //Cache loading wheel
+        var size = 50;
+        $loadingWheel = loading.clone();
+        $loadingWheel.attr('width', size);
+        $loadingWheel.attr('height', size);
+        $loadingWheel.addClass('center-block');
+    });
+
+
+    function nextWeek() {
+        week = week >= 52 ? 1 : week + 1;
+        loadTableData(week);
+    }
+
+    function prevWeek() {
+        week = week <= 1 ? 52 : week - 1;
+        loadTableData(week);
+    }
+
+    function thisWeek() {
+        var weekNumber = (new Date()).getWeekNumber();
+        if (weekNumber !== week) {
+            week = weekNumber;
+            loadTableData(week);
+        }
+    }
+
+    function clearTable(){
+        var $timeTable = $('#timeTable');
+        $timeTable.find('tbody').empty();
+        $timeTable.parent().children('h5').remove();
+        $timeTable.parent().children('img').remove();
+    }
+
+    function loadTableData(week) {
+        //Change week number in timetable
+        $('.weekNumber').html(week);
+
+        var $timeTable = $('#timeTable');
+
+        //Clear table
+        clearTable();
+
+        $('.warning').hide();
+
+      //Show loading wheel
+        $timeTable.parent().append($loadingWheel);
+
+        $.get('/api/kurs/uke/' + week, function (data) {
+            var $rows = $('<div></div>');
+            if (data.length === 0) {
+                clearTable();
+                var $message = $('<h5></h5>').html('Ingen kurs denne uken');
+                $message.insertAfter($timeTable);
+                $('.warning').show();
+            }else{
+                data.forEach(function (courseClass) {
+                    var $tr = $('<tr></tr>');
+
+                    var $courseLink = $('<a></a>');
+                    $courseLink.html(courseClass.course);
+                    $courseLink.attr('href', Routing.generate('course_info', {id: courseClass.courseId}));
+
+                    //Append class data to row
+                    $tr.append($('<td></td>').html(courseClass.day));
+                    $tr.append($('<td></td>').html($courseLink));
+                    $tr.append($('<td></td>').html(courseClass.time));
+                    $tr.append($('<td></td>').html(courseClass.place));
+
+                    $rows.append($tr);
+                });
+
+                clearTable();
+                $timeTable.find('tbody').append($rows.children());
+            }
+        })
+    }
+
+</script>

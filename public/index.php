@@ -10,7 +10,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 
 $config = require __DIR__ . '/../config.php';
 
-$request = Zend\Diactoros\ServerRequestFactory::fromGlobals(
+$request = Laminas\Diactoros\ServerRequestFactory::fromGlobals(
     $_SERVER,
     $_GET,
     $_POST,
@@ -22,7 +22,7 @@ $app = new AppKernel($config);
 
 try {
     $response = $app->handle($request);
-} catch(RequestNotHandledException $e) {
+} catch (RequestNotHandledException $e) {
     http_response_code(404);
     exit("404 Not Found\n\nNo response generated.");
 }

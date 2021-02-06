@@ -1,0 +1,30 @@
+{% extends 'base/base.html.twig' %}
+
+{% block body %}
+
+    <h1>{{ get_club().name }} sine kurs</h1>
+    <hr>
+    <br>
+    <br>
+    {% for course in courses if not course.hideOnHomepage %}
+        <div class="row" id="{{ course.name }}">
+
+            <div class="col-md-4">
+                <div class="flex-center">
+                    <img class="img-responsive" src="{{ course.image.filePath }}" alt="{{ course.name }}">
+                </div>
+            </div>
+
+            <div class="col-md-8">
+                <h2>{{ course.name }}</h2>
+                <p>{{ course.description|replace({'\n':'<br>'})|purify }}</p>
+                <p>
+                    <a href="{{ path('sign_up') }}#{{ course.name }}" class="btn btn-primary">Meld deg på {{ course.name }}</a>
+                    {% if not course.challengesUrl is null %}<a href="{{ course.challengesUrl }}" class="btn btn-default">Oppgaver</a>{% endif %}
+                </p>
+            </div>
+        </div>
+        <hr>
+    {% endfor %}
+
+{% endblock %}
